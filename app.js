@@ -1,6 +1,6 @@
 // Tasas de cambio manuales (puedes actualizarlas semanalmente)
-let usdToCopRate = 4500; // 1 USD = 4500 COP
-let usdToEurRate = 0.85; // 1 USD = 0.85 EUR
+let usdToCopRate = 4114.18; // 1 USD = 4114.18 COP
+let usdToEurRate = 1.08740; // 1 USD = 1.08740 EUR
 
 // Mostrar el valor de la TRM
 document.getElementById('trmValue').innerText = usdToCopRate.toLocaleString();
