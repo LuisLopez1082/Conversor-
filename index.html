@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moneda - Comercio Exterior</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1501163268664-3fdf329d019f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); /* Imagen de fondo */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Fondo semitransparente para mejorar la legibilidad */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+            z-index: -1;
+        }
+
+        /* Contenedor principal */
+        .converter {
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            backdrop-filter: blur(5px); /* Efecto de desenfoque */
+        }
+
+        /* Título */
+        .converter h2 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Secciones separadas */
+        .converter .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: rgba(236, 240, 241, 0.9); /* Fondo semitransparente */
+        }
+
+        /* Colores diferentes para cada cuadro de resultado */
+        .converter #copResult {
+            background-color: #e6f7ff; /* Azul claro */
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .converter #usdResult {
+            background-color: #fff3e6; /* Naranja claro */
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .converter #eurResult {
+            background-color: #e6ffe6; /* Verde claro */
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* Campos de entrada */
+        .converter input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .converter input:focus {
+            border-color: #3498db;
+        }
+
+        /* Selector de moneda */
+        .converter select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .converter select:focus {
+            border-color: #3498db;
+        }
+
+        /* Resultados */
+        .converter .result {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* Tasas de cambio */
+        .converter .rate {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        /* Texto TRM */
+        .converter .trm-text {
+            font-size: 14px;
+            color: #2c3e50;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="converter">
+    <h2>Conversor de Moneda</h2>
+    
+    <!-- Campo de entrada y selector de moneda -->
+    <div class="section">
+        <input type="text" id="amount" placeholder="Digite el valor" oninput="formatInput(this)">
+        <select id="currency" onchange="resetInput()">
+            <option value="COP">COP</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+        </select>
+        <p class="trm-text">TRM: 1 USD = <span id="trmValue">${usdToCopRate.toLocaleString()}</span> COP</p>
+    </div>
+
+    <!-- Resultados de las conversiones -->
+    <div class="section">
+        <p class="result" id="copResult"></p>
+        <p class="rate" id="copRate"></p>
+    </div>
+
+    <div class="section">
+        <p class="result" id="usdResult"></p>
+        <p class="rate" id="usdRate"></p>
+    </div>
+
+    <div class="section">
+        <p class="result" id="eurResult"></p>
+        <p class="rate" id="eurRate"></p>
+    </div>
+</div>
+
+<!-- Vincular el archivo app.js -->
+<script src="app.js"></script>
+
+</body>
+</html>
