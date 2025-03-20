@@ -1,293 +1,142 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor de Moneda - Comercio Exterior</title>
-    <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+// Tasas de cambio manuales (puedes actualizarlas semanalmente)
+let usdToCopRate = 4000; // 1 USD = 4000 COP
+let usdToEurRate = 0.85; // 1 USD = 0.85 EUR
 
-        /* Fondo semitransparente para mejorar la legibilidad */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
-            z-index: -1;
-            transition: background-color 0.3s ease;
-        }
+// Mostrar el valor de la TRM
+document.getElementById('trmValue').innerText = usdToCopRate.toLocaleString();
 
-        /* Modo oscuro */
-        body.dark-mode::before {
-            background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
-        }
+// Función para restablecer el campo de entrada
+function resetInput() {
+    document.getElementById('amount').value = ''; // Limpiar el campo de entrada
+    document.getElementById('copResult').innerText = ''; // Limpiar el resultado COP
+    document.getElementById('usdResult').innerText = ''; // Limpiar el resultado USD
+    document.getElementById('eurResult').innerText = ''; // Limpiar el resultado EUR
+}
 
-        body.dark-mode {
-            color: #ffffff;
-        }
+// Función para formatear el valor de entrada
+function formatInput(input) {
+    // Eliminar caracteres no numéricos (excepto el punto decimal)
+    let value = input.value.replace(/[^0-9.]/g, '');
 
-        body.dark-mode .converter {
-            background-color: rgba(0, 0, 0, 0.9); /* Fondo oscuro semitransparente */
-            color: #ffffff;
-        }
+    // Separar la parte entera y la parte decimal
+    let parts = value.split('.');
+    let integerPart = parts[0];
+    let decimalPart = parts.length > 1 ? `.${parts[1]}` : '';
 
-        body.dark-mode .section {
-            background-color: rgba(51, 51, 51, 0.9); /* Fondo oscuro semitransparente */
-        }
+    // Formatear la parte entera con separadores de miles
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-        body.dark-mode input,
-        body.dark-mode select {
-            background-color: #333;
-            color: #fff;
-            border-color: #555;
-        }
+    // Actualizar el valor del campo de entrada
+    input.value = integerPart + decimalPart;
 
-        body.dark-mode .result,
-        body.dark-mode .rate {
-            color: #fff;
-        }
+    // Realizar las conversiones automáticamente
+    convertAll();
+}
 
-        /* Contenedor principal */
-        .converter {
-            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            backdrop-filter: blur(5px); /* Efecto de desenfoque */
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+// Función para formatear un número (ocultar decimales si son cero)
+function formatNumber(number) {
+    return number % 1 === 0 ? number.toString() : number.toFixed(5).replace(/\.?0+$/, '');
+}
 
-        /* Título */
-        .converter h2 {
-            font-size: 24px;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
+// Función para realizar todas las conversiones
+function convertAll() {
+    const amount = parseFloat(document.getElementById('amount').value.replace(/,/g, ''));
+    const currency = document.getElementById('currency').value;
 
-        body.dark-mode .converter h2 {
-            color: #ffffff;
-        }
+    if (isNaN(amount)) {
+        document.getElementById('copResult').innerText = 'Por favor, ingresa una cantidad válida.';
+        document.getElementById('usdResult').innerText = '';
+        document.getElementById('eurResult').innerText = '';
+        return;
+    }
 
-        /* Mensaje de periodo de aplicación */
-        .converter .periodo {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-bottom: 20px;
-            transition: color 0.3s ease;
-        }
+    let copAmount, usdAmount, eurAmount;
 
-        body.dark-mode .converter .periodo {
-            color: #cccccc;
-        }
+    // Convertir el valor ingresado a COP, USD y EUR
+    if (currency === 'COP') {
+        copAmount = amount;
+        usdAmount = copAmount / usdToCopRate;
+        eurAmount = usdAmount * usdToEurRate;
+    } else if (currency === 'USD') {
+        usdAmount = amount;
+        copAmount = usdAmount * usdToCopRate;
+        eurAmount = usdAmount * usdToEurRate;
+    } else if (currency === 'EUR') {
+        eurAmount = amount;
+        usdAmount = eurAmount / usdToEurRate;
+        copAmount = usdAmount * usdToCopRate;
+    }
 
-        /* Secciones separadas */
-        .converter .section {
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: rgba(236, 240, 241, 0.9); /* Fondo semitransparente */
-            transition: background-color 0.3s ease;
-        }
+    // Mostrar los resultados con banderas
+    document.getElementById('copResult').innerHTML = `
+        <div class="bandera-resultado">
+            <img src="https://flagcdn.com/co.svg" alt="COP">
+        </div>
+        ${copAmount.toLocaleString()} COP
+    `;
+    document.getElementById('usdResult').innerHTML = `
+        <div class="bandera-resultado">
+            <img src="https://flagcdn.com/us.svg" alt="USD">
+        </div>
+        ${formatNumber(usdAmount)} USD
+    `;
+    document.getElementById('eurResult').innerHTML = `
+        <div class="bandera-resultado">
+            <img src="https://flagcdn.com/eu.svg" alt="EUR">
+        </div>
+        ${formatNumber(eurAmount)} EUR
+    `;
+}
 
-        /* Campos de entrada */
-        .converter input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            color: #333;
-            outline: none;
-            transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-        }
+// Función para cambiar entre modo claro y oscuro
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+}
 
-        .converter input:focus {
-            border-color: #3498db;
-        }
+// Función para cambiar la imagen de fondo aleatoriamente
+function cambiarFondo() {
+    const imagenes = [
+        'https://images.unsplash.com/photo-1501163268664-3fdf329d019f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+        'https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+        'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+        'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+    ];
+    const imagenAleatoria = imagenes[Math.floor(Math.random() * imagenes.length)];
+    document.body.style.backgroundImage = `url(${imagenAleatoria})`;
+}
 
-        /* Selector de moneda */
-        .converter select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            color: #333;
-            background-color: #fff;
-            outline: none;
-            transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-        }
+// Cambiar la imagen de fondo cada 10 segundos
+setInterval(cambiarFondo, 10000);
+cambiarFondo(); // Cambiar al cargar la página
 
-        .converter select:focus {
-            border-color: #3498db;
-        }
+// Función para mostrar la sección de estadística
+function mostrarEstadistica() {
+    document.getElementById('estadistica').style.display = 'block';
+    document.querySelector('.converter').style.display = 'none';
+    generarGrafico();
+}
 
-        /* Resultados */
-        .converter .result {
-            margin-top: 10px;
-            font-size: 18px;
-            color: #2c3e50;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: color 0.3s ease;
-        }
-
-        body.dark-mode .converter .result {
-            color: #ffffff;
-        }
-
-        /* Bandera en el resultado */
-        .bandera-resultado {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .bandera-resultado img {
-            width: 20px;
-            height: 20px;
-            object-fit: cover;
-        }
-
-        /* Tasas de cambio */
-        .converter .rate {
-            margin-top: 5px;
-            font-size: 14px;
-            color: #7f8c8d;
-            transition: color 0.3s ease;
-        }
-
-        body.dark-mode .converter .rate {
-            color: #cccccc;
-        }
-
-        /* Botón de modo oscuro */
-        .modo-oscuro {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .modo-oscuro:hover {
-            background-color: #2980b9;
-        }
-
-        /* Menú de estadística */
-        .menu-estadistica {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .menu-estadistica:hover {
-            background-color: #2980b9;
-        }
-
-        /* Gráficos */
-        .grafico {
-            margin-top: 20px;
-            width: 100%;
-            height: 200px;
-        }
-    </style>
-</head>
-<body>
-
-<!-- Botón de modo oscuro -->
-<button class="modo-oscuro" onclick="toggleDarkMode()">Modo Oscuro</button>
-
-<!-- Menú de estadística -->
-<button class="menu-estadistica" onclick="mostrarEstadistica()">Estadística</button>
-
-<div class="converter">
-    <h2>Conversor de Moneda</h2>
-    <p class="periodo">Periodo de aplicación Desde: <span id="fechaInicio">01/01/2025</span> Hasta: <span id="fechaFin">31/12/2025</span></p>
-    
-    <!-- Campo de entrada y selector de moneda -->
-    <div class="section">
-        <input type="text" id="amount" placeholder="Digite el valor" oninput="formatInput(this)">
-        <select id="currency" onchange="resetInput()">
-            <option value="COP">COP</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-        </select>
-        <p class="trm-text">TRM: 1 USD = <span id="trmValue">${usdToCopRate.toLocaleString()}</span> COP</p>
-    </div>
-
-    <!-- Resultados de las conversiones -->
-    <div class="section">
-        <p class="result" id="copResult"></p>
-        <p class="rate" id="copRate"></p>
-    </div>
-
-    <div class="section">
-        <p class="result" id="usdResult"></p>
-        <p class="rate" id="usdRate"></p>
-    </div>
-
-    <div class="section">
-        <p class="result" id="eurResult"></p>
-        <p class="rate" id="eurRate"></p>
-    </div>
-</div>
-
-<!-- Sección de estadística -->
-<div id="estadistica" style="display: none;">
-    <h2>Estadística</h2>
-    <canvas id="grafico" class="grafico"></canvas>
-</div>
-
-<!-- Vincular el archivo app.js -->
-<script src="app.js"></script>
-
-<!-- Librería Chart.js para gráficos -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-</body>
-</html>
+// Función para generar el gráfico
+function generarGrafico() {
+    const ctx = document.getElementById('grafico').getContext('2d');
+    const grafico = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['1 día', '1 semana', '1 mes', '3 meses', '6 meses', '1 año', '3 años'],
+            datasets: [{
+                label: 'Variación del cambio (USD a COP)',
+                data: [4000, 4050, 4100, 4150, 4200, 4250, 4300], // Datos de ejemplo
+                borderColor: '#3498db',
+                borderWidth: 2,
+                fill: false,
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false,
+                },
+            },
+        },
+    });
+}
