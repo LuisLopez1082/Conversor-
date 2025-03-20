@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="converter">
+    <!-- Menú de navegación -->
+    <div class="menu">
+        <button onclick="mostrarConversor()">Conversor</button>
+        <button onclick="mostrarEstadistica()">Estadística</button>
+        <button onclick="mostrarNoticias()">Noticias</button>
+        <button onclick="toggleDarkMode()">Modo Oscuro</button>
+    </div>
+
+    <!-- Sección del conversor -->
+    <div class="converter" id="conversor">
         <h1>Conversor de Monedas</h1>
         <input type="text" id="amount" placeholder="Ingresa la cantidad" oninput="formatInput(this)">
         <select id="currency">
@@ -17,9 +26,6 @@
         </select>
         <button onclick="convertAll()">Convertir</button>
         <button onclick="resetInput()">Restablecer</button>
-        <button onclick="toggleDarkMode()">Modo Oscuro</button>
-        <button onclick="mostrarEstadistica()">Estadísticas</button>
-        <button onclick="mostrarNoticias()">Noticias Económicas</button>
 
         <h2>Resultados:</h2>
         <p id="copResult"></p>
@@ -27,7 +33,8 @@
         <p id="eurResult"></p>
     </div>
 
-    <div id="estadistica" style="display: none;">
+    <!-- Sección de estadística -->
+    <div id="estadistica" class="hidden">
         <h2>Estadísticas de Cambio</h2>
         <label for="fechaInicio">Fecha de inicio:</label>
         <input type="date" id="fechaInicio">
@@ -37,9 +44,12 @@
         <canvas id="grafico"></canvas>
     </div>
 
-    <div id="noticias" style="display: none;">
+    <!-- Sección de noticias -->
+    <div id="noticias" class="hidden">
         <h2>Noticias Económicas del Día</h2>
-        <div id="noticiasContainer"></div>
+        <div id="noticiasContainer">
+            <p>Noticias de ejemplo (sin API).</p>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
