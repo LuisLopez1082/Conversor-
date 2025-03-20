@@ -229,11 +229,74 @@
             background-color: #2980b9;
         }
 
+        /* Botón de noticias */
+        .menu-noticias {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-noticias:hover {
+            background-color: #2980b9;
+        }
+
         /* Gráficos */
         .grafico {
             margin-top: 20px;
             width: 100%;
             height: 200px;
+        }
+
+        /* Filtro de fechas */
+        .filtro-fechas {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .filtro-fechas input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Noticias */
+        .noticias {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .noticias h3 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .noticias ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .noticias li {
+            margin-bottom: 10px;
+        }
+
+        .noticias a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .noticias a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -244,6 +307,9 @@
 
 <!-- Menú de estadística -->
 <button class="menu-estadistica" onclick="mostrarEstadistica()">Estadística</button>
+
+<!-- Botón de noticias -->
+<button class="menu-noticias" onclick="mostrarNoticias()">Noticias</button>
 
 <div class="converter">
     <h2>Conversor de Moneda</h2>
@@ -280,7 +346,25 @@
 <!-- Sección de estadística -->
 <div id="estadistica" style="display: none;">
     <h2>Estadística</h2>
+    <div class="filtro-fechas">
+        <input type="date" id="fechaInicioFiltro">
+        <input type="date" id="fechaFinFiltro">
+        <button onclick="filtrarDatos()">Filtrar</button>
+    </div>
     <canvas id="grafico" class="grafico"></canvas>
+</div>
+
+<!-- Sección de noticias -->
+<div id="noticias" style="display: none;">
+    <h2>Noticias Económicas</h2>
+    <div class="noticias">
+        <h3>Estados Unidos</h3>
+        <ul id="noticias-usa"></ul>
+        <h3>Europa</h3>
+        <ul id="noticias-europa"></ul>
+        <h3>Colombia</h3>
+        <ul id="noticias-colombia"></ul>
+    </div>
 </div>
 
 <!-- Vincular el archivo app.js -->
