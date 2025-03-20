@@ -71,9 +71,4 @@ function convertAll() {
     document.getElementById('copResult').innerText = `${copAmount.toLocaleString()} COP`;
     document.getElementById('usdResult').innerText = `${formatNumber(usdAmount)} USD`;
     document.getElementById('eurResult').innerText = `${formatNumber(eurAmount)} EUR`;
-
-    // Mostrar las tasas de cambio
-    document.getElementById('copRate').innerText = `1 COP = ${(1 / usdToCopRate).toFixed(8)} USD`;
-    document.getElementById('usdRate').innerText = `1 USD = ${usdToEurRate.toFixed(8)} EUR`;
-    document.getElementById('eurRate').innerText = `1 EUR = ${(1 / usdToEurRate).toFixed(8)} USD`;
 }
