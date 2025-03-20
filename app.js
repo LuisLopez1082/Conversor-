@@ -105,7 +105,7 @@ function cambiarFondo() {
     document.body.style.backgroundImage = `url(${imagenAleatoria})`;
 }
 
-// Cambiar la imagen de fondo cada 10 segundos
+// Cambiar la imagen de fondo cada 300 segundos
 setInterval(cambiarFondo, 10000);
 cambiarFondo(); // Cambiar al cargar la página
 
