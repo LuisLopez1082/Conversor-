@@ -1,3 +1,31 @@
+// Tasa de cambio manual (1 USD = 4000 COP)
+const exchangeRate = 4000;
+
+// Función para convertir la moneda
+function convertCurrency() {
+    // Obtener el valor ingresado por el usuario
+    const amount = parseFloat(document.getElementById('amount').value);
+    const currency = document.getElementById('currency').value;
+
+    // Validar que el valor sea un número
+    if (isNaN(amount)) {
+        document.getElementById('result').innerText = 'Por favor, ingresa una cantidad válida.';
+        return;
+    }
+
+    let result;
+    if (currency === 'usdToCop') {
+        // Convertir de USD a COP
+        result = amount * exchangeRate;
+        document.getElementById('result').innerText = `${amount} USD = ${result.toLocaleString()} COP`;
+    } else if (currency === 'copToUsd') {
+        // Convertir de COP a USD
+        result = amount / exchangeRate;
+        // Mostrar el resultado con más de 10 decimales
+        document.getElementById('result').innerText = `${amount} COP = ${result.toFixed(12)} USD`;
+    }
+}
+
 // Función para abrir/cerrar el menú
 function toggleMenu() {
     const menu = document.getElementById('menu-opciones');
