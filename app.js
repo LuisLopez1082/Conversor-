@@ -67,8 +67,28 @@ function convertAll() {
         copAmount = usdAmount * usdToCopRate;
     }
 
-    // Mostrar los resultados
-    document.getElementById('copResult').innerText = `${copAmount.toLocaleString()} COP`;
-    document.getElementById('usdResult').innerText = `${formatNumber(usdAmount)} USD`;
-    document.getElementById('eurResult').innerText = `${formatNumber(eurAmount)} EUR`;
+    // Mostrar los resultados con banderas
+    document.getElementById('copResult').innerHTML = `
+        <div class="bandera-resultado">
+            <img src="https://flagcdn.com/co.svg" alt="COP">
+        </div>
+        ${copAmount.toLocaleString()} COP
+    `;
+    document.getElementById('usdResult').innerHTML = `
+        <div class="bandera-resultado">
+            <img src="https://flagcdn.com/us.svg" alt="USD">
+        </div>
+        ${formatNumber(usdAmount)} USD
+    `;
+    document.getElementById('eurResult').innerHTML = `
+        <div class="bandera-resultado">
+            <img src="https://flagcdn.com/eu.svg" alt="EUR">
+        </div>
+        ${formatNumber(eurAmount)} EUR
+    `;
+}
+
+// Función para cambiar entre modo claro y oscuro
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
 }
