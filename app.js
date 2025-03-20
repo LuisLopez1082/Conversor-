@@ -9,6 +9,22 @@ const currencySelect = document.getElementById('currency');
 const trmValue = document.getElementById('trmValue');
 trmValue.textContent = usdToCopRate.toLocaleString();
 
+// Fondo aleatorio de comercio exterior
+const fondos = [
+    'url("https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")', // Puerto
+    'url("https://images.unsplash.com/photo-1523437113738-bd3c5e5a0f9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80")', // Contenedores
+    'url("https://images.unsplash.com/photo-1523437113738-bd3c5e5a0f9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80")', // Avión
+];
+
+function cambiarFondo() {
+    const fondoAleatorio = fondos[Math.floor(Math.random() * fondos.length)];
+    document.body.style.backgroundImage = fondoAleatorio;
+}
+
+// Cambiar fondo cada 10 segundos
+setInterval(cambiarFondo, 10000);
+cambiarFondo(); // Cambiar al cargar
+
 // Formatear input con separadores de miles
 function formatInput(input) {
     let value = input.value.replace(/,/g, '');
