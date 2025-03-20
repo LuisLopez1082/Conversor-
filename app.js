@@ -21,7 +21,7 @@ function cambiarFondo() {
     document.body.style.backgroundImage = fondoAleatorio;
 }
 
-// Cambiar fondo cada 10 segundos
+// Cambiar fondo cada 3000 segundos
 setInterval(cambiarFondo, 10000);
 cambiarFondo(); // Cambiar al cargar
 
@@ -130,7 +130,15 @@ function getFlagUrl(currency) {
     };
     return flags[currency];
 }
-
+// Función para abrir/cerrar el menú
+function toggleMenu() {
+    const menu = document.getElementById('menu-opciones');
+    if (menu.style.display === 'flex') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'flex';
+    }
+}
 // Modo oscuro
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
