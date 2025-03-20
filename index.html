@@ -193,101 +193,69 @@
             color: #cccccc;
         }
 
-        /* Botón de modo oscuro */
-        .modo-oscuro {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .modo-oscuro:hover {
-            background-color: #2980b9;
-        }
-
-        /* Menú de estadística */
-        .menu-estadistica {
-            position: absolute;
+        /* Botón de menú */
+        .menu-principal {
+            position: fixed;
             top: 20px;
             left: 20px;
             background-color: #3498db;
-            color: #fff;
+            color: white;
             border: none;
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 20px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            z-index: 1000;
+            transition: background-color 0.3s;
         }
 
-        .menu-estadistica:hover {
+        .menu-principal:hover {
             background-color: #2980b9;
         }
 
-        /* Botón de noticias */
-        .menu-noticias {
-            position: absolute;
+        .menu-opciones {
+            position: fixed;
             top: 60px;
             left: 20px;
-            background-color: #3498db;
-            color: #fff;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+        .menu-opciones button {
+            padding: 12px;
             border: none;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .menu-noticias:hover {
-            background-color: #2980b9;
-        }
-
-        /* Gráficos */
-        .grafico {
-            margin-top: 20px;
-            width: 100%;
-            height: 200px;
-        }
-
-        /* Filtro de fechas */
-        .filtro-fechas {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .filtro-fechas input {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        /* Noticias */
-        .noticias {
-            margin-top: 20px;
+            background: none;
             text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .noticias h3 {
-            font-size: 18px;
-            color: #2c3e50;
-            margin-bottom: 10px;
+        .menu-opciones button:hover {
+            background-color: #f0f0f0;
         }
 
-        .noticias ul {
-            list-style-type: none;
-            padding: 0;
+        body.dark-mode .menu-opciones {
+            background-color: #333;
+            color: white;
         }
 
-        .noticias li {
-            margin-bottom: 10px;
+        body.dark-mode .menu-opciones button:hover {
+            background-color: #444;
+        }
+
+        /* Sección de estadística */
+        #estadistica {
+            display: none;
+        }
+
+        /* Sección de noticias */
+        #noticias {
+            display: none;
         }
 
         .noticias a {
@@ -302,15 +270,16 @@
 </head>
 <body>
 
-<!-- Botón de modo oscuro -->
-<button class="modo-oscuro" onclick="toggleDarkMode()">Modo Oscuro</button>
+<!-- Botón de menú -->
+<button class="menu-principal" onclick="toggleMenu()">☰</button>
+<div id="menu-opciones" class="menu-opciones">
+    <button onclick="mostrarConverter()">Conversor</button>
+    <button onclick="mostrarEstadistica()">Estadísticas</button>
+    <button onclick="mostrarNoticias()">Noticias</button>
+    <button onclick="toggleDarkMode()">Modo Oscuro</button>
+</div>
 
-<!-- Menú de estadística -->
-<button class="menu-estadistica" onclick="mostrarEstadistica()">Estadística</button>
-
-<!-- Botón de noticias -->
-<button class="menu-noticias" onclick="mostrarNoticias()">Noticias</button>
-
+<!-- Conversor de moneda -->
 <div class="converter">
     <h2>Conversor de Moneda</h2>
     <p class="periodo">Periodo de aplicación Desde: <span id="fechaInicio">01/01/2025</span> Hasta: <span id="fechaFin">31/12/2025</span></p>
@@ -323,7 +292,7 @@
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
         </select>
-        <p class="trm-text">TRM: 1 USD = <span id="trmValue">${usdToCopRate.toLocaleString()}</span> COP</p>
+        <p class="trm-text">TRM: 1 USD = <span id="trmValue">4000</span> COP</p>
     </div>
 
     <!-- Resultados de las conversiones -->
@@ -344,7 +313,7 @@
 </div>
 
 <!-- Sección de estadística -->
-<div id="estadistica" style="display: none;">
+<div id="estadistica">
     <h2>Estadística</h2>
     <div class="filtro-fechas">
         <input type="date" id="fechaInicioFiltro">
@@ -355,7 +324,7 @@
 </div>
 
 <!-- Sección de noticias -->
-<div id="noticias" style="display: none;">
+<div id="noticias">
     <h2>Noticias Económicas</h2>
     <div class="noticias">
         <h3>Estados Unidos</h3>
@@ -367,11 +336,9 @@
     </div>
 </div>
 
-<!-- Vincular el archivo app.js -->
-<script src="app.js"></script>
-
-<!-- Librería Chart.js para gráficos -->
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
