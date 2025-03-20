@@ -124,12 +124,11 @@ function toggleDarkMode() {
 let chartInstance = null;
 
 function mostrarEstadistica() {
-    const estadisticaDiv = document.getElementById('estadistica');
-    estadisticaDiv.style.display = estadisticaDiv.style.display === 'none' ? 'block' : 'none';
-    
-    if (estadisticaDiv.style.display === 'block' && !chartInstance) {
-        initializeChart();
-    }
+    document.querySelector('.converter').style.display = 'none';
+    document.getElementById('noticias').style.display = 'none';
+    document.getElementById('estadistica').style.display = 'block';
+    if (!chartInstance) initializeChart();
+    toggleMenu();
 }
 
 function initializeChart() {
@@ -168,24 +167,44 @@ function filtrarDatos() {
 
 // Gestión de noticias
 function mostrarNoticias() {
-    const noticiasDiv = document.getElementById('noticias');
-    noticiasDiv.style.display = noticiasDiv.style.display === 'none' ? 'block' : 'none';
-    if (noticiasDiv.style.display === 'block') cargarNoticias();
+    document.querySelector('.converter').style.display = 'none';
+    document.getElementById('estadistica').style.display = 'none';
+    document.getElementById('noticias').style.display = 'block';
+    cargarNoticias();
+    toggleMenu();
 }
 
 function cargarNoticias() {
     const noticias = {
         'noticias-usa': [
-            { titulo: 'Fed anuncia nuevas medidas económicas', enlace: '#' },
-            { titulo: 'Nuevo paquete de estímulo en EE.UU.', enlace: '#' }
+            { 
+                titulo: 'Fed sube tasas de interés', 
+                enlace: 'https://www.example.com/noticia-fed' 
+            },
+            { 
+                titulo: 'Nuevo paquete económico en EE.UU.', 
+                enlace: 'https://www.example.com/paquete-economico' 
+            }
         ],
         'noticias-europa': [
-            { titulo: 'BCE mantiene tasas de interés', enlace: '#' },
-            { titulo: 'UE anuncia nuevo plan económico', enlace: '#' }
+            { 
+                titulo: 'BCE anuncia medidas contra inflación', 
+                enlace: 'https://www.example.com/bce-inflacion' 
+            },
+            { 
+                titulo: 'UE aprueba nuevo plan energético', 
+                enlace: 'https://www.example.com/plan-energetico' 
+            }
         ],
         'noticias-colombia': [
-            { titulo: 'Banco de la República actualiza proyecciones', enlace: '#' },
-            { titulo: 'Nuevas medidas para el comercio exterior', enlace: '#' }
+            { 
+                titulo: 'Banrep aumenta tasa de intervención', 
+                enlace: 'https://www.example.com/banrep-tasas' 
+            },
+            { 
+                titulo: 'Nuevas políticas de comercio exterior', 
+                enlace: 'https://www.example.com/politicas-comercio' 
+            }
         ]
     };
 
@@ -193,13 +212,26 @@ function cargarNoticias() {
         const lista = document.getElementById(id);
         lista.innerHTML = datos.map(noticia => `
             <li>
-                <a href="${noticia.enlace}" target="_blank">${noticia.titulo}</a>
+                <a href="${noticia.enlace}" target="_blank" rel="noopener noreferrer">
+                    ${noticia.titulo}
+                </a>
             </li>
         `).join('');
     }
 }
 
-// Inicializar gráfico al cargar
+// Cierra el menú al hacer clic fuera
+document.addEventListener('click', (event) => {
+    const menu = document.getElementById('menu-opciones');
+    const menuButton = document.querySelector('.menu-principal');
+    
+    if (!menu.contains(event.target) && !menuButton.contains(event.target)) {
+        menu.style.display = 'none';
+    }
+});
+
+// Inicialización al cargar
 document.addEventListener('DOMContentLoaded', () => {
-    initializeChart();
+    mostrarConverter();
+    document.querySelector('.converter').style.display = 'block';
 });
