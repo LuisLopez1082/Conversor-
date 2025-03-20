@@ -18,6 +18,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Fondo semitransparente para mejorar la legibilidad */
@@ -30,6 +31,37 @@
             bottom: 0;
             background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
             z-index: -1;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Modo oscuro */
+        body.dark-mode::before {
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
+        }
+
+        body.dark-mode {
+            color: #ffffff;
+        }
+
+        body.dark-mode .converter {
+            background-color: rgba(0, 0, 0, 0.9); /* Fondo oscuro semitransparente */
+            color: #ffffff;
+        }
+
+        body.dark-mode .section {
+            background-color: rgba(51, 51, 51, 0.9); /* Fondo oscuro semitransparente */
+        }
+
+        body.dark-mode input,
+        body.dark-mode select {
+            background-color: #333;
+            color: #fff;
+            border-color: #555;
+        }
+
+        body.dark-mode .result,
+        body.dark-mode .rate {
+            color: #fff;
         }
 
         /* Contenedor principal */
@@ -42,6 +74,7 @@
             max-width: 400px;
             text-align: center;
             backdrop-filter: blur(5px); /* Efecto de desenfoque */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Título */
@@ -50,6 +83,11 @@
             color: #2c3e50;
             margin-bottom: 10px;
             font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .converter h2 {
+            color: #ffffff;
         }
 
         /* Mensaje de periodo de aplicación */
@@ -57,31 +95,11 @@
             font-size: 14px;
             color: #7f8c8d;
             margin-bottom: 20px;
+            transition: color 0.3s ease;
         }
 
-        /* Bandera en círculo */
-        .banderas {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-
-        .bandera {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .bandera img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
+        body.dark-mode .converter .periodo {
+            color: #cccccc;
         }
 
         /* Secciones separadas */
@@ -90,6 +108,7 @@
             padding: 15px;
             border-radius: 8px;
             background-color: rgba(236, 240, 241, 0.9); /* Fondo semitransparente */
+            transition: background-color 0.3s ease;
         }
 
         /* Campos de entrada */
@@ -102,7 +121,7 @@
             font-size: 16px;
             color: #333;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
         }
 
         .converter input:focus {
@@ -120,7 +139,7 @@
             color: #333;
             background-color: #fff;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
         }
 
         .converter select:focus {
@@ -133,6 +152,34 @@
             font-size: 18px;
             color: #2c3e50;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .converter .result {
+            color: #ffffff;
+        }
+
+        /* Bandera en el resultado */
+        .bandera-resultado {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .bandera-resultado img {
+            width: 20px;
+            height: 20px;
+            object-fit: cover;
         }
 
         /* Tasas de cambio */
@@ -140,28 +187,41 @@
             margin-top: 5px;
             font-size: 14px;
             color: #7f8c8d;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .converter .rate {
+            color: #cccccc;
+        }
+
+        /* Botón de modo oscuro */
+        .modo-oscuro {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modo-oscuro:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
 
+<!-- Botón de modo oscuro -->
+<button class="modo-oscuro" onclick="toggleDarkMode()">Modo Oscuro</button>
+
 <div class="converter">
     <h2>Conversor de Moneda</h2>
-    <p class="periodo">Periodo de aplicación Desde: <span id="fechaInicio">17/03/2025</span> Hasta: <span id="fechaFin">23/03/2025</span></p>
+    <p class="periodo">Periodo de aplicación Desde: <span id="fechaInicio">01/01/2025</span> Hasta: <span id="fechaFin">31/12/2025</span></p>
     
-    <!-- Bandera en círculo -->
-    <div class="banderas">
-        <div class="bandera">
-            <img src="https://flagcdn.com/us.svg" alt="USD">
-        </div>
-        <div class="bandera">
-            <img src="https://flagcdn.com/eu.svg" alt="EUR">
-        </div>
-        <div class="bandera">
-            <img src="https://flagcdn.com/co.svg" alt="COP">
-        </div>
-    </div>
-
     <!-- Campo de entrada y selector de moneda -->
     <div class="section">
         <input type="text" id="amount" placeholder="Digite el valor" oninput="formatInput(this)">
