@@ -1,32 +1,41 @@
-// Tasas de cambio manuales
-let usdToCopRate = 4000; // 1 USD = 4000 COP
-let usdToEurRate = 0.85; // 1 USD = 0.85 EUR
+// Tasas de cambio manuales (puedes actualizarlas semanalmente)
+let usdToCopRate = 4114.18; // 1 USD = 4114.18 COP
+let usdToEurRate = 1.08740; // 1 USD = 1.08740 EUR
+
+// Mostrar el valor de la TRM
+document.getElementById('trmValue').innerText = usdToCopRate.toLocaleString();
 
 // Función para restablecer el campo de entrada
 function resetInput() {
-    document.getElementById('amount').value = '';
-    document.getElementById('copResult').innerText = '';
-    document.getElementById('usdResult').innerText = '';
-    document.getElementById('eurResult').innerText = '';
+    document.getElementById('amount').value = ''; // Limpiar el campo de entrada
+    document.getElementById('copResult').innerText = ''; // Limpiar el resultado COP
+    document.getElementById('usdResult').innerText = ''; // Limpiar el resultado USD
+    document.getElementById('eurResult').innerText = ''; // Limpiar el resultado EUR
 }
 
 // Función para formatear el valor de entrada
 function formatInput(input) {
+    // Eliminar caracteres no numéricos (excepto el punto decimal)
     let value = input.value.replace(/[^0-9.]/g, '');
-    if ((value.match(/\./g) || []).length > 1) {
-        value = value.slice(0, -1);
-    }
+
+    // Separar la parte entera y la parte decimal
     let parts = value.split('.');
     let integerPart = parts[0];
     let decimalPart = parts.length > 1 ? `.${parts[1]}` : '';
+
+    // Formatear la parte entera con separadores de miles
     integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // Actualizar el valor del campo de entrada
     input.value = integerPart + decimalPart;
+
+    // Realizar las conversiones automáticamente
     convertAll();
 }
 
 // Función para formatear un número (ocultar decimales si son cero)
 function formatNumber(number) {
-    return number % 1 === 0 ? number.toString() : number.toFixed(5).replace(/\.?0+$/, '');
+    return number % 1 === 0 ? number.toString() : number.toFixed(8).replace(/\.?0+$/, '');
 }
 
 // Función para realizar todas las conversiones
@@ -43,6 +52,7 @@ function convertAll() {
 
     let copAmount, usdAmount, eurAmount;
 
+    // Convertir el valor ingresado a COP, USD y EUR
     if (currency === 'COP') {
         copAmount = amount;
         usdAmount = copAmount / usdToCopRate;
@@ -57,73 +67,13 @@ function convertAll() {
         copAmount = usdAmount * usdToCopRate;
     }
 
-    document.getElementById('copResult').innerHTML = `
-        <div class="bandera-resultado">
-            <img src="https://flagcdn.com/co.svg" alt="COP">
-        </div>
-        ${copAmount.toLocaleString()} COP
-    `;
-    document.getElementById('usdResult').innerHTML = `
-        <div class="bandera-resultado">
-            <img src="https://flagcdn.com/us.svg" alt="USD">
-        </div>
-        ${formatNumber(usdAmount)} USD
-    `;
-    document.getElementById('eurResult').innerHTML = `
-        <div class="bandera-resultado">
-            <img src="https://flagcdn.com/eu.svg" alt="EUR">
-        </div>
-        ${formatNumber(eurAmount)} EUR
-    `;
-}
+    // Mostrar los resultados
+    document.getElementById('copResult').innerText = `${copAmount.toLocaleString()} COP`;
+    document.getElementById('usdResult').innerText = `${formatNumber(usdAmount)} USD`;
+    document.getElementById('eurResult').innerText = `${formatNumber(eurAmount)} EUR`;
 
-// Función para cambiar entre modo claro y oscuro
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-}
-
-// Función para mostrar el conversor
-function mostrarConversor() {
-    document.getElementById('conversor').classList.remove('hidden');
-    document.getElementById('estadistica').classList.add('hidden');
-    document.getElementById('noticias').classList.add('hidden');
-}
-
-// Función para mostrar la sección de estadística
-function mostrarEstadistica() {
-    document.getElementById('conversor').classList.add('hidden');
-    document.getElementById('estadistica').classList.remove('hidden');
-    document.getElementById('noticias').classList.add('hidden');
-}
-
-// Función para mostrar la sección de noticias
-function mostrarNoticias() {
-    document.getElementById('conversor').classList.add('hidden');
-    document.getElementById('estadistica').classList.add('hidden');
-    document.getElementById('noticias').classList.remove('hidden');
-}
-
-// Función para generar el gráfico (datos de ejemplo)
-function generarGrafico() {
-    const ctx = document.getElementById('grafico').getContext('2d');
-    const grafico = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['1 día', '1 semana', '1 mes', '3 meses', '6 meses', '1 año', '3 años'],
-            datasets: [{
-                label: 'Variación del cambio (USD a COP)',
-                data: [4000, 4050, 4100, 4150, 4200, 4250, 4300], // Datos de ejemplo
-                borderColor: '#3498db',
-                borderWidth: 2,
-                fill: false,
-            }],
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: false,
-                },
-            },
-        },
-    });
+    // Mostrar las tasas de cambio
+    document.getElementById('copRate').innerText = `1 COP = ${(1 / usdToCopRate).toFixed(8)} USD`;
+    document.getElementById('usdRate').innerText = `1 USD = ${usdToEurRate.toFixed(8)} EUR`;
+    document.getElementById('eurRate').innerText = `1 EUR = ${(1 / usdToEurRate).toFixed(8)} USD`;
 }
